@@ -55,6 +55,14 @@ async function handleEmailLogin({password,user,res}){
 }
 
 function generateUserObject(user){
+    const {accessToken,refreshToken} =generateToken(user);
+    const userObj=user.toJSON()
+    userObj['accessToken']=accessToken;
+    userObj['refreshToken']=refreshToken;
+    return userObj;
+}
+
+function generateToken(user){
     const accessToken=jwt.sign({
         email:user.email,
         _id:user._id,
@@ -69,8 +77,5 @@ function generateUserObject(user){
     },process.env.JWT_SECRET,{
         expiresIn:'30d'
     })
-    const userObj=user.toJSON()
-    userObj['accessToken']=accessToken;
-    userObj['refreshToken']=refreshToken;
-    return userObj;
+    return {accessToken, refreshToken};
 }
