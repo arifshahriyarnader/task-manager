@@ -1,6 +1,7 @@
 const express=require('express');
 const Task=require('../../models/Task');
 const authenticateToken=require('../../middleware/auth');
+const { findByIdAndDelete } = require('../../models/User');
 
 const router=express.Router();
 
@@ -59,6 +60,23 @@ router.put('/:id', authenticateToken, async(req,res)  =>{
             return res.status(404).json({message:"Task not found"})
         }
 
+    }
+    catch(error){
+        res.status(500).json({message:"Something went wrong"})
+    }
+})
+
+//delete task
+router.delete('/:id', authenticateToken, async(req,res) =>{
+    try{
+        const id=req.params.id;
+        const deleteTask= await Task.findByIdAndDelete(id);
+        if(deleteTask){
+            return res.status(200).json({message:"Task is deleted"})
+        }
+        else{
+            return res.status(404).json({message:"Task not found"})
+        }
     }
     catch(error){
         res.status(500).json({message:"Something went wrong"})
