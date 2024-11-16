@@ -44,4 +44,25 @@ router.get('/:id', authenticateToken, async(req,res) =>{
     }
 })
 
+//update task
+router.put('/:id', authenticateToken, async(req,res)  =>{
+    try{
+        const id=req.params.id;
+        const userBody=req.body;
+        const updateTask=await Task.findByIdAndUpdate(id,userBody, {
+            new:true,
+        });
+        if(updateTask){
+            return  res.json(updateTask)
+        }
+        else{
+            return res.status(404).json({message:"Task not found"})
+        }
+
+    }
+    catch(error){
+        res.status(500).json({message:"Something went wrong"})
+    }
+})
+
 module.exports=router;
