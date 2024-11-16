@@ -12,7 +12,11 @@ app.use(bodyParser.json());
 connectDB();
 
 //routes
+//users route
 app.use('/api/users', require('./routes/api/user'))
+
+//task route
+app.use('/api/task', require('./routes/api/task'))
 
 const port=5000;
 app.listen(port, () =>{

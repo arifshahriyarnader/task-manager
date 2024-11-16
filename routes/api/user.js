@@ -4,7 +4,7 @@ const User=require('../../models/User');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken')
 const authenticateToken=require('../../middleware/auth');
-const auth = require("../../middleware/auth");
+
 
 //register
 router.post('/register', async(req,res) =>{
