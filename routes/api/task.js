@@ -31,10 +31,11 @@ router.get('/', authenticateToken, async(req,res) =>{
 //gets one task
 router.get('/:id', authenticateToken, async(req,res) =>{
     try{
-        const id=req.params.id;
-        const task=await Task.findById(id);
+        const userId=req.user._id;
+        const taskId=req.params.id;
+        const task=await Task.findOne({_id:taskId, userId:userId});
         if(task){
-            return res.json(task);
+            return res.status(200).json(task);
         }
         else{
             return res.status(400).json({message:"Task not found"})
