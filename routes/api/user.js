@@ -75,11 +75,23 @@ router.get('/user-profile', authenticateToken, async(req,res) =>{
    }
 })
 
-//get all users by admin
+//get all users admin only
 router.get('/',authenticateToken, roleAdmin('admin'), async(req,res) =>{
     try{
         const users= await User.find();
          res.status(200).json(users)
+    }
+    catch(error){
+        res.status(500).json({message:"Something went wrong"})
+    }
+})
+
+//get specific users admin only
+router.get('/:id', authenticateToken, roleAdmin('admin'), async(req,res) =>{
+    try{
+        const id=req.params.id;
+        const user= await User.findById(id);
+        res.status(200).json(user)
     }
     catch(error){
         res.status(500).json({message:"Something went wrong"})
