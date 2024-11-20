@@ -4,6 +4,7 @@ const User=require('../../models/User');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken')
 const authenticateToken=require('../../middleware/auth');
+const roleAdmin=require('../../middleware/roleAdmin');
 
 
 //register
@@ -74,6 +75,16 @@ router.get('/user-profile', authenticateToken, async(req,res) =>{
    }
 })
 
+//get all users by admin
+router.get('/',authenticateToken, roleAdmin('admin'), async(req,res) =>{
+    try{
+        const users= await User.find();
+         res.status(200).json(users)
+    }
+    catch(error){
+        res.status(500).json({message:"Something went wrong"})
+    }
+})
 
 module.exports=router;
 
@@ -100,6 +111,7 @@ function generateToken(user){
     const accessToken=jwt.sign({
         email:user.email,
         _id:user._id,
+        userType:user.userType
 
     },process.env.JWT_SECRET,{
         expiresIn:'1d'
@@ -107,6 +119,7 @@ function generateToken(user){
     const refreshToken=jwt.sign({
         email:user.email,
         _id:user._id,
+        userType:user.userType
 
     },process.env.JWT_SECRET,{
         expiresIn:'30d'
