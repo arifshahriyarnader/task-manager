@@ -102,13 +102,21 @@ router.get('/:id', authenticateToken, roleAdmin('admin'), async(req,res) =>{
 router.delete('/:id', authenticateToken, roleAdmin('admin'), async(req,res)  =>{
     try{
         const id=req.params.id;
-        const user=await User.findByIdAndDelete(id);
-        res.status(200).json({message:"User is deletd"})
+        const deleteUser=await User.findByIdAndDelete(id);
+        if(deleteUser){
+            res.json({message:"user is deleted"})
+        }
+        else{
+            res.status(404).json({message:"User not found"})
+        }
+        
     } 
     catch(error){
         res.status(500).json({message:"Something went wrong"})
     }   
 })
+
+
 
 module.exports=router;
 
