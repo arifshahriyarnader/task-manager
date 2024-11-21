@@ -116,6 +116,64 @@ router.delete('/:id', authenticateToken, roleAdmin('admin'), async(req,res)  =>{
     }   
 })
 
+//delete user by user
+router.delete('/me', authenticateToken, async(req,res) =>{
+    try{
+        const id=req.user._id;
+        console.log(id)
+        const deleteUser=await  User.findByIdAndDelete(id);
+        if(deleteUser){
+            res.status(200).json({message:"your account has been deleted successfully"})
+        }
+        else{
+             res.status(404).json({message:"User not found"})
+        }
+    }
+    catch(error){
+        res.status(500).json({message:"Something went wrong"})
+    }
+})
+
+//update user by admin
+router.put('/:id', authenticateToken, roleAdmin('admin'),  async(req,res) =>{
+    try{
+        const id=req.params.id;
+        const userBody=req.body;
+        const updateUser=await User.findByIdAndUpdate(id, userBody, {
+            new:true,
+        })
+        if(updateUser){
+            res.status(200).json(updateUser)
+        }
+        else{
+            res.status(404).json({message:"User not found"})
+        }
+    }
+    catch(error){
+        res.status(500).json({message:"Something went  wrong"})
+    }
+})
+
+//user update their account
+router.put('/:id', authenticateToken, async(req,res)  =>{
+    try{
+        const  id=req.user._id;
+    const userBody=req.body;
+    const updateUser=await User.findByIdAndUpdate(id, userBody,  {
+        new:true,
+    })
+    console.log(updateUser);
+    if(updateUser){
+        res.status(200).json(updateUser)
+    }
+    else{
+        res.status(404).json({message:"user not found"})
+    }
+    }
+    catch(error){
+        res.status(500).json({message:"Something went  wrong"})
+    }
+})
 
 
 module.exports=router;
