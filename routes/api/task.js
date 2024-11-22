@@ -1,7 +1,7 @@
 const express=require('express');
 const Task=require('../../models/Task');
 const authenticateToken=require('../../middleware/auth');
-const { findByIdAndDelete } = require('../../models/User');
+const roleAdmin = require('../../middleware/roleAdmin');
 
 const router=express.Router();
 
@@ -17,10 +17,10 @@ router.post('/', authenticateToken,  async(req,res)  =>{
     }
 })
 
-//gets all tasks
-router.get('/', authenticateToken, async(req,res) =>{
+//gets all tasks admin only
+router.get('/', authenticateToken, roleAdmin('admin'), async(req,res) =>{
     try{
-        const getAllTasks= await Task.find({userId:req.user._id})
+        const getAllTasks= await Task.find()
         res.json(getAllTasks)
     }
     catch(error){
@@ -28,8 +28,8 @@ router.get('/', authenticateToken, async(req,res) =>{
     }
 })
 
-//gets one task
-router.get('/:id', authenticateToken, async(req,res) =>{
+//gets specific task user only
+router.get('/user-task/:id', authenticateToken, async(req,res) =>{
     try{
         const userId=req.user._id;
         const taskId=req.params.id;
@@ -45,8 +45,24 @@ router.get('/:id', authenticateToken, async(req,res) =>{
         res.status(500).json({message: "Something went wrong"})
     }
 })
+//user get their all task
+router.get('/user-task', authenticateToken, async(req,res) =>{
+    try{
+        const userId=req.user._id;
+        const task=await Task.find({userId:userId});
+        if(task && task.length>0){
+            return res.status(200).json(task);
+        }
+        else{
+            return res.status(400).json({message:"Task not found"})
+        }
+    }
+    catch(error){
+        res.status(500).json({message: "Something went wrong"})
+    }
+})
 
-//update task
+//update task user only
 router.put('/:id', authenticateToken, async(req,res)  =>{
     try{
         const id=req.params.id;
@@ -67,7 +83,7 @@ router.put('/:id', authenticateToken, async(req,res)  =>{
     }
 })
 
-//delete task
+//delete task users only
 router.delete('/:id', authenticateToken, async(req,res) =>{
     try{
         const id=req.params.id;
@@ -83,5 +99,7 @@ router.delete('/:id', authenticateToken, async(req,res) =>{
         res.status(500).json({message:"Something went wrong"})
     }
 })
+
+
 
 module.exports=router;
