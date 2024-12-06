@@ -115,18 +115,19 @@ router.delete("/me", authenticateToken, async (req, res) => {
 });
 
 //delete specific user admin only
-router.delete(
-  "/:id",
-  authenticateToken,
-  roleAdmin("admin"),
-  async (req, res) => {
+router.delete("/:id", authenticateToken, async (req, res) => {
     try {
-      const id = req.params.id;
-      const deleteUser = await User.findByIdAndDelete(id);
-      if (deleteUser) {
-        res.json({ message: "user is deleted" });
-      } else {
-        res.status(404).json({ message: "User not found" });
+      if(req.user.UserType != 'admin'){
+        return res.status(401).json({message:'You  are not an admin'})
+      }
+      else{
+        const id = req.params.id;
+        const deleteUser = await User.findByIdAndDelete(id);
+        if (deleteUser) {
+          res.json({ message: "user is deleted" });
+        } else {
+          res.status(404).json({ message: "User not found" });
+        }
       }
     } catch (error) {
       res.status(500).json({ message: "Something went wrong" });
