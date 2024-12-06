@@ -117,11 +117,11 @@ router.delete("/me", authenticateToken, async (req, res) => {
 //delete specific user admin only
 router.delete("/:id", authenticateToken, async (req, res) => {
     try {
-      if(req.user.UserType != 'admin'){
+      if(req.user.userType != 'admin'){
         return res.status(401).json({message:'You  are not an admin'})
       }
       else{
-        const id = req.params.id;
+        const id = req.user._id;
         const deleteUser = await User.findByIdAndDelete(id);
         if (deleteUser) {
           res.json({ message: "user is deleted" });
