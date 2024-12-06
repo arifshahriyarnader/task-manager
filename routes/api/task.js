@@ -3,6 +3,7 @@ const Task = require("../../models/Task");
 const authenticateToken = require("../../middleware/auth");
 const roleAdmin = require("../../middleware/roleAdmin");
 const router = express.Router();
+const {default: mongoose}=require("mongoose");
 const { body, validationResult } = require("express-validator");
 
 //create task
@@ -23,10 +24,67 @@ router.post("/", authenticateToken, async (req, res) => {
 });
 
 //gets all tasks admin only
-router.get("/", authenticateToken, roleAdmin("admin"), async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
-    const getAllTasks = await Task.find();
-    res.json(getAllTasks);
+    if(req.user.userType != 'admin'){
+      res.status(401).json({message:"You are not an admin"})
+    } 
+    else{
+      let userId=req.user._id;
+      userId=new mongoose.Types.ObjectId(userId);
+      let current=req?.query?.current ?? "1";
+      current=parseInt(current);
+      let pageSize=req?.query?.pageSize ?? "1";
+      pageSize=parseInt(pageSize);
+      let sort=req?.query?.sort ?? "asc";
+
+      const pipeline=[];
+      pipeline.push({
+        $match:{
+          userId:userId,
+        },
+      })
+
+      //sort data creation time
+      switch(sort){
+        case "asc":
+          pipeline.push({
+            $sort:{
+              createdAt:1
+            }
+          });
+          break;
+          case "desc":
+            pipeline.push({
+              $sort:{
+                createdAt:1
+              }
+            })
+            break;
+      }
+
+      pipeline.push({
+        $skip:(current -1) * pageSize,
+      });
+      pipeline.push({
+        $limit:pageSize*1
+      })
+
+      pipeline.push({
+        $lookup:{
+          from:"users",
+          localField:"userId",
+          foreignField:"_id",
+          as:"user"
+        }
+      });
+
+      const getAllTasks=await Task.aggregate(pipeline);
+      res.json(getAllTasks);
+
+
+    
+    }
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
