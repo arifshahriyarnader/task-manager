@@ -3,17 +3,17 @@ const Task = require("../../models/Task");
 const authenticateToken = require("../../middleware/auth");
 const roleAdmin = require("../../middleware/roleAdmin");
 const router = express.Router();
-const {body, validationResult}=require("express-validator");
+const { body, validationResult } = require("express-validator");
 
 //create task
 router.post("/", authenticateToken, async (req, res) => {
   try {
-    const userId=req.user._id;
-    const taskObj={
-      title:req.body.title,
-      description:req.body.description ?? "",
-      userId:userId
-    }
+    const userId = req.user._id;
+    const taskObj = {
+      title: req.body.title,
+      description: req.body.description ?? "",
+      userId: userId,
+    };
     const task = new Task(taskObj);
     await task.save();
     res.status(201).json(task);
@@ -32,12 +32,14 @@ router.get("/", authenticateToken, roleAdmin("admin"), async (req, res) => {
   }
 });
 
-//gets specific task user only
+//get on of my task user only
 router.get("/user-task/:id", authenticateToken, async (req, res) => {
   try {
     const userId = req.user._id;
     const taskId = req.params.id;
-    const task = await Task.findOne({ _id: taskId, userId: userId });
+    const task = await Task.findOne({ _id: taskId, userId: userId })
+      .populate("userId")
+      .exec();
     if (task) {
       return res.status(200).json(task);
     } else {
