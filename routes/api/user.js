@@ -66,21 +66,31 @@ router.get("/user-profile", authenticateToken, async (req, res) => {
 });
 
 //get all users admin only
-router.get("/", authenticateToken, roleAdmin("admin"), async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
-    const users = await User.find();
-    res.status(200).json(users);
+    if(req.user.userType != 'admin'){
+      return res.status(401).json({message:'You  are not an admin'})
+    }
+    else{
+      const users = await User.find();
+      res.status(200).json(users);
+    }
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
 });
 
 //get specific user admin only
-router.get("/:id", authenticateToken, roleAdmin("admin"), async (req, res) => {
+router.get("/:id", authenticateToken, async (req, res) => {
   try {
-    const id = req.params.id;
-    const user = await User.findById(id);
-    res.status(200).json(user);
+    if(req.user.userType != 'admin'){
+      return res.status(401).json({message:'You  are not an admin'})
+    }
+    else{
+      const id = req.params.id;
+      const user = await User.findById(id);
+      res.status(200).json(user);
+    }
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
