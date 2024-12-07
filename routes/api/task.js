@@ -1,7 +1,6 @@
 const express = require("express");
 const Task = require("../../models/Task");
 const authenticateToken = require("../../middleware/auth");
-const roleAdmin = require("../../middleware/roleAdmin");
 const router = express.Router();
 const {default: mongoose}=require("mongoose");
 const { body, validationResult } = require("express-validator");
@@ -111,7 +110,7 @@ router.get("/user-task/:id", authenticateToken, async (req, res) => {
 router.get("/user-task", authenticateToken, async (req, res) => {
   try {
     const userId = req.user._id;
-    const task = await Task.find({ userId: userId });
+    const task = await Task.find({ userId: userId }).populate("userId").exec();
     if (task && task.length > 0) {
       return res.status(200).json(task);
     } else {
