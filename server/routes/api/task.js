@@ -3,7 +3,7 @@ const Task = require("../../models/Task");
 const authenticateToken = require("../../middleware/auth");
 const router = express.Router();
 const {default: mongoose}=require("mongoose");
-const { body, validationResult } = require("express-validator");
+
 
 //create task
 router.post("/", authenticateToken, async (req, res) => {

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Nav = () => {
   return (
@@ -7,21 +8,21 @@ const Nav = () => {
         <a href="/" className="font-bold text-3xl" style={{color: '#FF9000'}}>TodoAPP</a>
       </div>
       <ul className="flex flex-col pt-10 items-center gap-18 md:gap-20 cursor-pointer font-bold md:flex-row md:pt-0">
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li>
-          <a href="/">Todo</a>
-        </li>
-        <li>
-          <a href="/">Sign Up</a>
-        </li>
-        <li>
-          <a href="/">Sign In</a>
-        </li>
-        <li>
-          <a href="/">Logout</a>
-        </li>
+        <Link to="/">
+          Home
+        </Link>
+        <Link to="/todo">
+          Todo
+        </Link>
+        <Link to="/register">
+          Sign Up
+        </Link>
+        <Link to="/login">
+          Sign In
+        </Link>
+        <Link to="/">
+          Logout
+        </Link>
       </ul>
     </nav>
   );
