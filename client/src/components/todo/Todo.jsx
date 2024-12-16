@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import TodoCard from './TodoCard';
 
-
 const Todo = () => {
   const [newTodoTitle, setNewTodoTitle] =useState('');
   const [newTodoDescription, setNewTodoDescription] =useState('');
@@ -12,9 +11,11 @@ const Todo = () => {
   const handleDescriptionnChange=(e) => setNewTodoDescription(e.target.value)
   
   const handleClick=() =>{
+    //avoid adding empty todos
     if(!newTodoTitle || !newTodoDescription){
       return;
     }
+    //add the new todo list
     const newTodo={title:newTodoTitle, description:newTodoDescription};
       setTodoLists([...todoLists,newTodo])
 
@@ -81,4 +82,4 @@ const Todo = () => {
   )
 }
 
-export default Todo
+export default Todo;
