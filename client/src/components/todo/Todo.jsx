@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import TodoCard from './TodoCard';
+
 
 const Todo = () => {
   const [newTodoTitle, setNewTodoTitle] =useState('');
@@ -69,15 +71,10 @@ const Todo = () => {
       </button>
     </form>
   </div>
-  <div className='mt-4'>
-   <ul>
-     {todoLists.map((todo,index) =>(
-      <li key={index} className='mb-2'>
-         <h3>{todo.title}</h3>
-         <p>{todo.description}</p>
-      </li>
-     ))}
-   </ul>
+  <div className='w-full px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+    {todoLists.map((todo,index) =>(
+        <TodoCard key={index} title={todo.title} description={todo.description} />
+    ))}
  </div>
  </div>
   
