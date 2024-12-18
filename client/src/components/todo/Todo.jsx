@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import TodoCard from "./TodoCard";
+import { useNavigate } from "react-router-dom";
 
 const Todo = () => {
   const [newTodoTitle, setNewTodoTitle] = useState("");
   const [newTodoDescription, setNewTodoDescription] = useState("");
   const [todoLists, setTodoLists] = useState([]);
+  const navigate = useNavigate();
 
   const handleTitleChange = (e) => setNewTodoTitle(e.target.value);
 
@@ -24,10 +26,14 @@ const Todo = () => {
     setNewTodoDescription("");
   };
 
+  const handleUpdate = (todo) => {
+    navigate("/update", { state: { todo } });
+  };
   const handleDelete = (index) => {
     todoLists.splice(index, "1");
     setTodoLists([...todoLists]);
   };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="flex items-center justify-center">
@@ -87,6 +93,7 @@ const Todo = () => {
             key={index}
             title={todo.title}
             description={todo.description}
+            onUpdate={() => handleUpdate(todo)}
             onDelete={() => handleDelete(index)}
           />
         ))}
