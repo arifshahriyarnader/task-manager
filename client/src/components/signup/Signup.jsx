@@ -1,22 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 const Signup = () => {
+  const [formData, setFormData] = useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+    userType: "customer",
+  });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/users/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(res.data);
+      setFormData({
+        fname: "",
+        lname: "",
+        email: "",
+        password: "",
+        userType: "customer",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form className="w-full max-w-md bg-white p-8 shadow-md rounded-md">
+      <form
+        className="w-full max-w-md bg-white p-8 shadow-md rounded-md"
+        onSubmit={handleSubmit}
+      >
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
 
         <div className="mb-4">
           <label
-            htmlFor="firstName"
+            htmlFor="fname"
             className="block text-gray-700 font-medium mb-1"
           >
             First Name
           </label>
           <input
             type="text"
-            id="firstName"
-            name="firstName"
+            id="fname"
+            name="fname"
+            value={formData.fname}
+            onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             required
           />
@@ -24,15 +64,17 @@ const Signup = () => {
 
         <div className="mb-4">
           <label
-            htmlFor="lastName"
+            htmlFor="lname"
             className="block text-gray-700 font-medium mb-1"
           >
             Last Name
           </label>
           <input
             type="text"
-            id="lastName"
-            name="lastName"
+            id="lname"
+            name="lname"
+            value={formData.lname}
+            onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             required
           />
@@ -49,6 +91,8 @@ const Signup = () => {
             type="email"
             id="email"
             name="email"
+            value={formData.email}
+            onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             required
           />
@@ -65,6 +109,8 @@ const Signup = () => {
             type="password"
             id="password"
             name="password"
+            value={formData.password}
+            onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             required
           />
