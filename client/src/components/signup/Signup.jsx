@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ const Signup = () => {
     password: "",
     userType: "customer",
   });
+  const navigate=useNavigate()
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -32,6 +35,9 @@ const Signup = () => {
         password: "",
         userType: "customer",
       });
+      if(res.status === 201){
+        navigate('/login');
+      }
     } catch (error) {
       console.error(error);
     }
