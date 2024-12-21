@@ -8,7 +8,7 @@ const Signup = () => {
     lname: "",
     email: "",
     password: "",
-    userType: "customer",
+    userType: "user",
   });
   const navigate=useNavigate()
 
@@ -27,13 +27,14 @@ const Signup = () => {
           },
         }
       );
+      
       console.log(res.data);
       setFormData({
         fname: "",
         lname: "",
         email: "",
         password: "",
-        userType: "customer",
+        userType: "user",
       });
       if(res.status === 201){
         navigate('/login');
