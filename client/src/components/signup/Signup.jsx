@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { authServices } from "../../auth";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
@@ -10,38 +10,24 @@ const Signup = () => {
     password: "",
     userType: "user",
   });
-  const navigate=useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/users/register",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      
-      console.log(res.data);
-      setFormData({
-        fname: "",
-        lname: "",
-        email: "",
-        password: "",
-        userType: "user",
-      });
-      if(res.status === 201){
-        navigate('/login');
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    const payload = {
+      fname: formData.fname,
+      lname: formData.lname,
+      email: formData.email,
+      password: formData.password,
+      userType: formData.userType,
+    };
+    authServices
+      .signup(payload)
+      .then(() => navigate("/login"))
+      .catch(() => alert("Failed to signup"));
   };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
