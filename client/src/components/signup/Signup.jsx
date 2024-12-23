@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { authServices } from "../../auth";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Signup = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
     email: "",
     password: "",
+    confirmPassword: "",
     userType: "user",
   });
   const navigate = useNavigate();
@@ -17,6 +21,10 @@ const Signup = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords Don not match");
+      return;
+    }
     const payload = {
       fname: formData.fname,
       lname: formData.lname,
@@ -91,7 +99,7 @@ const Signup = () => {
           />
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 relative">
           <label
             htmlFor="password"
             className="block text-gray-700 font-medium mb-1"
@@ -99,7 +107,7 @@ const Signup = () => {
             Password
           </label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
             name="password"
             value={formData.password}
@@ -107,6 +115,40 @@ const Signup = () => {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             required
           />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 mt-[8px] cursor-pointer text-gray-600"
+          >
+            {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+          </span>
+        </div>
+
+        <div className="mb-6 relative">
+          <label
+            htmlFor="confirmPassword"
+            className="block text-gray-700 font-medium mb-1"
+          >
+            Confirm Password
+          </label>
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            required
+          />
+          <span
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 mt-[8px] cursor-pointer text-gray-600"
+          >
+            {showConfirmPassword ? (
+              <FaEyeSlash size={20} />
+            ) : (
+              <FaEye size={20} />
+            )}
+          </span>
         </div>
 
         <button
