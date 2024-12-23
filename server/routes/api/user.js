@@ -168,6 +168,7 @@ async function handleEmailLogin({ password, user, res }) {
 function generateUserObject(user) {
   const { accessToken, refreshToken } = generateToken(user);
   const userObj = user.toJSON();
+  delete userObj.password;
   userObj["accessToken"] = accessToken;
   userObj["refreshToken"] = refreshToken;
   return userObj;
