@@ -1,7 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Nav = () => {
+  const navigate=useNavigate();
+  const isUserLoggedIn=false;
+  const handleTodoClick=(e)=>{
+    e.preventDefault();
+    if(isUserLoggedIn){
+      navigate("/todo")
+    }
+    else{
+      navigate("/login")
+    }
+  }
   return (
     <nav className="flex flex-col items-center justify-around px-5 py-5 bg-[#F8F9FA] md:flex-row">
       <div>
@@ -11,7 +22,7 @@ const Nav = () => {
         <Link to="/">
           Home
         </Link>
-        <Link to="/todo">
+        <Link to="#" onClick={handleTodoClick}>
           Todo
         </Link>
         <Link to="/register">
