@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [honeypot,setHoneypot]=useState("");
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
@@ -17,10 +18,19 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if(e.target.name === "honeypot"){
+      setHoneypot(e.target.value);
+    }
+    else{
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(honeypot){
+      alert("Bot Detected. Submission rejected")
+      return;
+    }
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords Don not match");
       return;
@@ -44,7 +54,15 @@ const Signup = () => {
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
-
+         {/* Honeypot Field hidden from users */}
+         <input
+          type="text"
+          name="honeypot"
+          value={honeypot}
+          onChange={handleChange}
+          className="hidden"
+          autoComplete="off"
+        /> 
         <div className="mb-4">
           <label
             htmlFor="fname"
