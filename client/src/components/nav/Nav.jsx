@@ -1,9 +1,10 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { authServices } from "../../auth";
 
 const Nav = () => {
   const navigate=useNavigate();
-  const isUserLoggedIn=false;
+  const isUserLoggedIn=authServices.isUserLoggedIn();
   const handleTodoClick=(e)=>{
     e.preventDefault();
     if(isUserLoggedIn){
@@ -31,9 +32,9 @@ const Nav = () => {
         <Link to="/login">
           Sign In
         </Link>
-        <Link to="/">
+        {/* <Link to="/">
           Logout
-        </Link>
+        </Link> */}
       </ul>
     </nav>
   );

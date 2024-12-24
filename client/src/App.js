@@ -7,6 +7,7 @@ import Signup from './components/signup/Signup';
 import Signin from './components/signin/Signin';
 import Footer from './components/footer/Footer';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import SecureRoute from './router/SecureRoute';
 
 
 
@@ -17,7 +18,7 @@ function App() {
         <Nav />
         <Routes>
         <Route exact path="/" element={ <Home />}/>
-        <Route  path="/todo" element={ <Todo />}/>
+        <Route  path="/todo" element={<SecureRoute><Todo /></SecureRoute>}/>
         <Route  path="/register" element={ <Signup />}/>
         <Route  path="/login" element={ <Signin />}/>
         <Route  path="/update" element={ <UpdateTodo />}/>

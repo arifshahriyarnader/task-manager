@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { authServices } from "../../auth";
 
 const Home = () => {
   const navigate=useNavigate();
-  const isUserLoggedIn=false;
+  const isUserLoggedIn=authServices.isUserLoggedIn();
   const handleButtonClick=() =>{
     if(isUserLoggedIn){
       navigate('/todo')

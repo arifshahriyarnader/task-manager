@@ -7,6 +7,14 @@ const saveAuthUser = (authUser) =>
 const getAuthUser = (authUser) =>
   JSON.parse(localStorage.getItem(appConfig.CURRENT_USER_KEY));
 
+
+export const isUserLoggedIn=() =>{
+  if(getAuthUser()){
+    return true;
+  }
+  return false;
+}
+
 export const signup = ({ fname, lname, email, password, userType }) =>
   axios.post(`${appConfig.BASE_URL}/api/users/register`, {
     fname,
