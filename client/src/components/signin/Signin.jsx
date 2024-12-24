@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { authServices } from "../../auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -81,6 +81,15 @@ const Signin = () => {
         >
           Login
         </button>
+        <p className="text-center mt-4 text-gray-600">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="text-orange-500 font-bold hover:underline"
+          >
+            Please Register
+          </Link>
+        </p>
       </form>
     </div>
   );

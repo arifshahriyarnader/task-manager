@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { authServices } from "../../auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Signup = () => {
@@ -31,7 +31,7 @@ const Signup = () => {
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords Don not match");
+      alert("Passwords Do not match");
       return;
     }
     const payload = {
@@ -174,6 +174,15 @@ const Signup = () => {
         >
           Sign Up
         </button>
+        <p className="text-center mt-4 text-gray-600">
+          I have an account.{" "}
+          <Link
+            to="/login"
+            className="text-orange-500 font-bold hover:underline"
+          >
+            Please Login
+          </Link>
+        </p>
       </form>
     </div>
   );
