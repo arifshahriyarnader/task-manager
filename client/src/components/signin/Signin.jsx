@@ -1,11 +1,36 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { authServices } from "../../auth";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const payload = {
+      type: "email",
+      email: formData.email,
+      password: formData.password,
+    };
+    authServices
+      .login(payload)
+      .then(() => navigate("/"))
+      .catch(() => alert("Failed to login"));
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form className="w-full max-w-sm bg-white p-8 shadow-md rounded-md">
+      <form
+        className="w-full max-w-sm bg-white p-8 shadow-md rounded-md"
+        onSubmit={handleSubmit}
+      >
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
         <div className="mb-4">
@@ -19,6 +44,8 @@ const Signin = () => {
             type="email"
             id="email"
             name="email"
+            value={formData.email}
+            onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             required
           />
@@ -35,6 +62,8 @@ const Signin = () => {
             type={showPassword ? "text" : "password"}
             id="password"
             name="password"
+            value={formData.password}
+            onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             required
           />
