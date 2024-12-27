@@ -15,6 +15,9 @@ export const isUserLoggedIn=() =>{
   return false;
 }
 
+export const getAccessToken=() => getAuthUser().accessToken;
+export const getRefreshToken=() => getAuthUser().refreshToken;
+
 export const signup = ({ fname, lname, email, password, userType }) =>
   axios.post(`${appConfig.BASE_URL}/api/users/register`, {
     fname,
@@ -24,16 +27,18 @@ export const signup = ({ fname, lname, email, password, userType }) =>
     userType,
   });
 
-export const login = async ({ type, email, password }) => {
-  const res = (
+export const login = async ({ type, email, password,refreshToken }) => {
+  const authUser = (
     await axios.post(`${appConfig.BASE_URL}/api/users/login`, {
       type,
       email,
       password,
+      refreshToken
     })
   ).data;
 
-  saveAuthUser(res)
+  saveAuthUser(authUser)
+  return authUser;
 };
 
 export const logout=() => {
