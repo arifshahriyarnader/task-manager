@@ -1,43 +1,52 @@
 import React, { useState } from "react";
 import TodoCard from "./TodoCard";
 import { useNavigate } from "react-router-dom";
+import { createTask } from "../../services/todoServices";
 
 const Todo = () => {
-  const [newTodoTitle, setNewTodoTitle] = useState("");
-  const [newTodoDescription, setNewTodoDescription] = useState("");
+  const [todo, setTodo] = useState({ title: "", description: "" });
   const [todoLists, setTodoLists] = useState([]);
   const navigate = useNavigate();
 
-  const handleTitleChange = (e) => setNewTodoTitle(e.target.value);
+  const handleChange = (e) => {
+    setTodo({ ...todo, [e.target.name]: e.target.value });
+  };
 
-  const handleDescriptionnChange = (e) => setNewTodoDescription(e.target.value);
-
-  const handleClick = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     //avoid adding empty todos
-    if (!newTodoTitle || !newTodoDescription) {
+    if (!todo.title || !todo.description) {
       return;
     }
-    //add the new todo list
-    const newTodo = { title: newTodoTitle, description: newTodoDescription };
-    setTodoLists([...todoLists, newTodo]);
-
-    //clear the input fields
-    setNewTodoTitle("");
-    setNewTodoDescription("");
+    try {
+      const response = await createTask(todo);
+      //Add new todo
+      setTodoLists([...todoLists, response.data]);
+      //clear the input fields
+      setTodo({ title: "", description: "" });
+    } catch (error) {
+      console.error("Failed to create task:", error);
+      alert("Failed to creating task. please try again");
+    }
   };
 
   const handleUpdate = (todo) => {
     navigate("/update", { state: { todo } });
   };
+
   const handleDelete = (index) => {
-    todoLists.splice(index, "1");
-    setTodoLists([...todoLists]);
+    const updatedTodos = [...todoLists];
+    updatedTodos.splice(index, 1);
+    setTodoLists(updatedTodos);
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="flex items-center justify-center">
-        <form className="w-full max-w-md bg-white p-8 mt-20 shadow-md rounded-md">
+        <form
+          className="w-full max-w-md bg-white p-8 mt-20 shadow-md rounded-md"
+          onSubmit={handleSubmit}
+        >
           <h2 className="text-2xl font-bold text-center mb-6">Add Todo</h2>
 
           <div className="mb-4">
@@ -51,8 +60,8 @@ const Todo = () => {
               type="text"
               id="title"
               name="title"
-              value={newTodoTitle}
-              onChange={handleTitleChange}
+              value={todo.title}
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder="Enter a title"
               required
@@ -69,8 +78,8 @@ const Todo = () => {
             <textarea
               id="description"
               name="description"
-              value={newTodoDescription}
-              onChange={handleDescriptionnChange}
+              value={todo.description}
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder="Enter a description"
               rows="4"
@@ -80,7 +89,6 @@ const Todo = () => {
 
           <button
             type="submit"
-            onClick={handleClick}
             className="w-full bg-orange-500 text-white py-2 px-4 rounded-md font-bold hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
           >
             Add Todo
