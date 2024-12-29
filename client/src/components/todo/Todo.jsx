@@ -49,6 +49,8 @@ const Todo = () => {
   };
 
   const handleDelete = async (taskId, index) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this todo?");
+    if(isConfirmed){
     try {
       //delete todo from the server
       await deleteTask(taskId);
@@ -65,6 +67,7 @@ const Todo = () => {
       console.error("Failed to delete task", error);
       alert("Failed to delete task. please try agin");
     }
+  }
   };
 
   return (
