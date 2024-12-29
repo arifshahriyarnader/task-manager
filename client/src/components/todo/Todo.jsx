@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TodoCard from "./TodoCard";
 import { useNavigate } from "react-router-dom";
-import { createTask, deleteTask } from "../../services/todoServices";
+import { createTask, deleteTask, getUserTasks } from "../../services/todoServices";
 
 const Todo = () => {
   const [todo, setTodo] = useState({ title: "", description: "" });
@@ -9,10 +9,17 @@ const Todo = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
-    if (savedTasks) {
-      setTodoLists(savedTasks);
+    const fetchTasks=async() =>{
+      try{
+        const response= await getUserTasks();
+        setTodoLists(response.data);
+        localStorage.setItem("tasks", JSON.stringify(response.data))
+      }catch(error){
+        console.error("Failed to the fetch todos", error);
+        alert("failed to the fetch todos");
+      }
     }
+    fetchTasks()
   }, []);
 
   const handleChange = (e) => {

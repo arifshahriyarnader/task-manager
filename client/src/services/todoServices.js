@@ -10,3 +10,7 @@ export const createTask = ({ title, description }) =>
 export const deleteTask = (taskId) => {
   http.delete(`${appConfig.BASE_URL}/api/task/${taskId}`);
 };
+
+export const getUserTasks =() =>{
+  return http.get(`${appConfig.BASE_URL}/api/task/user-task`)
+}
