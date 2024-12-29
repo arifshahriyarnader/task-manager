@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import TodoCard from "./TodoCard";
 import { useNavigate } from "react-router-dom";
-import { createTask } from "../../services/todoServices";
+import { createTask, deleteTask } from "../../services/todoServices";
 
 const Todo = () => {
   const [todo, setTodo] = useState({ title: "", description: "" });
   const [todoLists, setTodoLists] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() =>{
-    const savedTasks =JSON.parse(localStorage.getItem("tasks"));
-    if(savedTasks){
-      setTodoLists(savedTasks)
+  useEffect(() => {
+    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+    if (savedTasks) {
+      setTodoLists(savedTasks);
     }
-  }, [])
+  }, []);
 
   const handleChange = (e) => {
     setTodo({ ...todo, [e.target.name]: e.target.value });
@@ -27,14 +27,14 @@ const Todo = () => {
     }
     try {
       const response = await createTask(todo);
-      const newData=response.data;
+      const newData = response.data;
 
       //Add new todo
-      const updatedTodoLists=[...todoLists,newData]
+      const updatedTodoLists = [...todoLists, newData];
       setTodoLists(updatedTodoLists);
 
       //save updated task to local stroage
-      localStorage.setItem("tasks", JSON.stringify(updatedTodoLists))
+      localStorage.setItem("tasks", JSON.stringify(updatedTodoLists));
 
       //clear the input fields
       setTodo({ title: "", description: "" });
@@ -48,10 +48,23 @@ const Todo = () => {
     navigate("/update", { state: { todo } });
   };
 
-  const handleDelete = (index) => {
-    const updatedTodos = [...todoLists];
-    updatedTodos.splice(index, 1);
-    setTodoLists(updatedTodos);
+  const handleDelete = async (taskId, index) => {
+    try {
+      //delete todo from the server
+      await deleteTask(taskId);
+
+      //remove the todo from the local state
+      const updatedTodos = [...todoLists];
+      updatedTodos.splice(index, 1);
+      setTodoLists(updatedTodos);
+
+      //update localstorage
+      localStorage.setItem("tasks", JSON.stringify(updatedTodos));
+      alert("Task deleted successfully")
+    } catch (error) {
+      console.error("Failed to delete task", error);
+      alert("Failed to delete task. please try agin");
+    }
   };
 
   return (
@@ -112,11 +125,11 @@ const Todo = () => {
       <div className="w-full px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {todoLists.map((todo, index) => (
           <TodoCard
-            key={index}
+            key={todo._id}
             title={todo.title}
             description={todo.description}
             onUpdate={() => handleUpdate(todo)}
-            onDelete={() => handleDelete(index)}
+            onDelete={() => handleDelete(todo._id, index)}
           />
         ))}
       </div>
