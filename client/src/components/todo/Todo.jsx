@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TodoCard from "./TodoCard";
 import { useNavigate } from "react-router-dom";
 import { createTask } from "../../services/todoServices";
@@ -7,6 +7,13 @@ const Todo = () => {
   const [todo, setTodo] = useState({ title: "", description: "" });
   const [todoLists, setTodoLists] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() =>{
+    const savedTasks =JSON.parse(localStorage.getItem("tasks"));
+    if(savedTasks){
+      setTodoLists(savedTasks)
+    }
+  }, [])
 
   const handleChange = (e) => {
     setTodo({ ...todo, [e.target.name]: e.target.value });
@@ -20,8 +27,15 @@ const Todo = () => {
     }
     try {
       const response = await createTask(todo);
+      const newData=response.data;
+
       //Add new todo
-      setTodoLists([...todoLists, response.data]);
+      const updatedTodoLists=[...todoLists,newData]
+      setTodoLists(updatedTodoLists);
+
+      //save updated task to local stroage
+      localStorage.setItem("tasks", JSON.stringify(updatedTodoLists))
+
       //clear the input fields
       setTodo({ title: "", description: "" });
     } catch (error) {
