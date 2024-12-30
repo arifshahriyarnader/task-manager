@@ -4,26 +4,59 @@ const User = require("../../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const authenticateToken = require("../../middleware/auth");
+const { body, validationResult } = require("express-validator");
 
 //register
-router.post("/register", async (req, res) => {
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const password = await bcrypt.hash(req.body.password, salt);
-    const userobj = {
-      fname: req.body.fname,
-      lname: req.body.lname,
-      email: req.body.email,
-      password: password,
-      userType: req?.body?.userType || "user",
-    };
-    const user = new User(userobj);
-    await user.save();
-    return res.status(201).json(user);
-  } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+router.post(
+  "/register",
+  [
+    body("fname", "First name is required").notEmpty(),
+    body("lname", "Last name is required").notEmpty(),
+    body("email", "Please enter a valid email").isEmail(),
+    body("email", "Email is required").notEmpty(),
+    body("password", "Password is required").notEmpty(),
+    body("password", "Passwords must be at least 8 characters long").isLength({
+      min: 8,
+    }),
+    body(
+      "password",
+      "Password must contain at least one uppercase letter"
+    ).matches("[A-Z]", "g"),
+    body(
+      "password",
+      "Password must contain at least one lowercase letter"
+    ).matches("[a-z]", "g"),
+    body("password", "Password must contain at least one number").matches(
+      "[0-9]",
+      "g"
+    ),
+    body("userType", "userType is required").notEmpty(),
+    body("userType", "give a valid userType").isIn(["user", "admin"]),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+      } else {
+        const salt = await bcrypt.genSalt(10);
+        const password = await bcrypt.hash(req.body.password, salt);
+        const userobj = {
+          fname: req.body.fname,
+          lname: req.body.lname,
+          email: req.body.email,
+          password: password,
+          userType: req?.body?.userType || "user",
+        };
+        const user = new User(userobj);
+        await user.save();
+        return res.status(201).json(user);
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Something went wrong" });
+    }
   }
-});
+);
 
 //login a user
 router.post("/login", async (req, res) => {
@@ -67,10 +100,9 @@ router.get("/user-profile", authenticateToken, async (req, res) => {
 //get all users admin only
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    if(req.user.userType != 'admin'){
-      return res.status(401).json({message:'You  are not an admin'})
-    }
-    else{
+    if (req.user.userType != "admin") {
+      return res.status(401).json({ message: "You  are not an admin" });
+    } else {
       const users = await User.find();
       res.status(200).json(users);
     }
@@ -82,10 +114,9 @@ router.get("/", authenticateToken, async (req, res) => {
 //get specific user admin only
 router.get("/:id", authenticateToken, async (req, res) => {
   try {
-    if(req.user.userType != 'admin'){
-      return res.status(401).json({message:'You  are not an admin'})
-    }
-    else{
+    if (req.user.userType != "admin") {
+      return res.status(401).json({ message: "You  are not an admin" });
+    } else {
       const id = req.params.id;
       const user = await User.findById(id);
       res.status(200).json(user);
@@ -115,24 +146,22 @@ router.delete("/me", authenticateToken, async (req, res) => {
 
 //delete specific user admin only
 router.delete("/:id", authenticateToken, async (req, res) => {
-    try {
-      if(req.user.userType != 'admin'){
-        return res.status(401).json({message:'You  are not an admin'})
+  try {
+    if (req.user.userType != "admin") {
+      return res.status(401).json({ message: "You  are not an admin" });
+    } else {
+      const id = req.user._id;
+      const deleteUser = await User.findByIdAndDelete(id);
+      if (deleteUser) {
+        res.json({ message: "user is deleted" });
+      } else {
+        res.status(404).json({ message: "User not found" });
       }
-      else{
-        const id = req.user._id;
-        const deleteUser = await User.findByIdAndDelete(id);
-        if (deleteUser) {
-          res.json({ message: "user is deleted" });
-        } else {
-          res.status(404).json({ message: "User not found" });
-        }
-      }
-    } catch (error) {
-      res.status(500).json({ message: "Something went wrong" });
     }
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
   }
-);
+});
 
 //user update their account
 router.put("/:id", authenticateToken, async (req, res) => {
