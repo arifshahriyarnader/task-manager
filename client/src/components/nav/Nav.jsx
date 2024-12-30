@@ -34,7 +34,23 @@ const Nav = () => {
     setShowMenu((prev) => !prev);
   }
 
-  
+  const handleOutsideClick=(e) =>{
+    if(!e.target.closest(".dropdown")){
+      setShowMenu(false);
+    }
+  }
+
+  useEffect(()  =>{
+    if(showMenu){
+      document.addEventListener("click", handleOutsideClick)
+    }
+    else{
+      document.removeEventListener("click", handleOutsideClick);
+    }
+    return () =>{
+      document.removeEventListener("click", handleOutsideClick)
+    }
+  }, [showMenu])
 
   const handleTodoClick = (e) => {
     e.preventDefault();
@@ -62,7 +78,7 @@ const Nav = () => {
           Todo
         </Link>
         {isUserLoggedIn ? (
-          <div className="relative">
+          <div className="relative dropdown">
             {/* Profile Icon */}
             <FaUserCircle
               size={32} // Icon size
