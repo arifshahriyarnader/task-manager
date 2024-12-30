@@ -24,12 +24,38 @@ const Signup = () => {
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
   };
+
+  //validate email format
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  //validate password format
+  const isValidPassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (honeypot) {
       alert("Bot Detected. Submission rejected");
       return;
     }
+
+    if (!isValidEmail(formData.email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    if (!isValidPassword(formData.password)) {
+      alert(
+        "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, and one number."
+      );
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords Do not match");
       return;
@@ -41,10 +67,18 @@ const Signup = () => {
       password: formData.password,
       userType: formData.userType,
     };
-    authServices
-      .signup(payload)
-      .then(() => navigate("/login"))
-      .catch(() => alert("Failed to signup"));
+
+    try {
+      await authServices.signup(payload);
+      navigate("/login");
+    } catch (error) {
+      if (error.response?.data?.errors) {
+        const validationErrors = error.response.data.errors;
+        alert(validationErrors.map((err) => err.msg).join("\n"));
+      } else {
+        alert("Failed to sign up. Please try again.");
+      }
+    }
   };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
