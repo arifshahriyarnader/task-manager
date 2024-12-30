@@ -9,18 +9,33 @@ const Todo = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchTasks=async() =>{
-      try{
-        const response= await getUserTasks();
+    const fetchTasks = async () => {
+      try {
+        const response = await getUserTasks();
+  
+        if (response.data.length === 0) {
+          setTodoLists([]);
+          localStorage.setItem("tasks", JSON.stringify([]));
+          return;
+        }
+  
+        // Update state and local storage with fetched todos
         setTodoLists(response.data);
-        localStorage.setItem("tasks", JSON.stringify(response.data))
-      }catch(error){
-        console.error("Failed to the fetch todos", error);
-        alert("failed to the fetch todos");
+        localStorage.setItem("tasks", JSON.stringify(response.data));
+      } catch (error) {
+        console.error("Failed to fetch todos", error);
+  
+        // Show alert only for real errors
+        if (error.response?.status && error.response.status !== 404) {
+          alert("Failed to fetch todos. Please try again later.");
+        }
       }
-    }
-    fetchTasks()
+    };
+  
+   
+    fetchTasks();
   }, []);
+  
 
   const handleChange = (e) => {
     setTodo({ ...todo, [e.target.name]: e.target.value });
