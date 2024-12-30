@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { updateTask } from "../../services/todoServices";
 const UpdateTodo = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -14,9 +15,19 @@ const UpdateTodo = () => {
   const handleUpdateDescriptionChange = (e) =>
     setUpdatedDescription(e.target.value);
 
-  const handleUpdate = () => {
-    const updatedTodo = { ...todo, updatedTitle, updtaedDescription };
-    navigate("/todo", { state: { updatedTodo } });
+  const handleUpdate = async () => {
+    try {
+      const updatedTodo = {
+        title: updatedTitle,
+        description: updtaedDescription,
+      };
+      await updateTask(todo._id, updatedTodo);
+      alert("Task updated successfully");
+      navigate("/todo");
+    } catch (error) {
+      console.error("Failed to update task", error);
+      alert("Failed to updated task");
+    }
   };
   const handleCancel = () => {
     navigate("/todo");

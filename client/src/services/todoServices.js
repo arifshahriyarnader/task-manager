@@ -14,3 +14,7 @@ export const deleteTask = (taskId) => {
 export const getUserTasks =() =>{
   return http.get(`${appConfig.BASE_URL}/api/task/user-task`)
 }
+
+export const updateTask=(taskId, UpdatedTask) =>{
+  return http.put(`${appConfig.BASE_URL}/api/task/${taskId}`,UpdatedTask)
+}
