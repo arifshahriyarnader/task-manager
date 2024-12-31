@@ -1,3 +1,6 @@
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import React, { useEffect, useState } from "react";
 import TodoCard from "./TodoCard";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +30,7 @@ const Todo = () => {
   
         // Show alert only for real errors
         if (error.response?.status && error.response.status !== 404) {
-          alert("Failed to fetch todos. Please try again later.");
+          toast.error("Failed to fetch todos. Please try again later.");
         }
       }
     };
@@ -62,7 +65,7 @@ const Todo = () => {
       setTodo({ title: "", description: "" });
     } catch (error) {
       console.error("Failed to create task:", error);
-      alert("Failed to creating task. please try again");
+      toast.error("Failed to creating task. please try again");
     }
   };
 
@@ -84,10 +87,10 @@ const Todo = () => {
 
       //update localstorage
       localStorage.setItem("tasks", JSON.stringify(updatedTodos));
-      alert("Task deleted successfully")
+      toast.success("Task deleted successfully")
     } catch (error) {
       console.error("Failed to delete task", error);
-      alert("Failed to delete task. please try agin");
+      toast.error("Failed to delete task. please try agin");
     }
   }
   };
@@ -146,6 +149,7 @@ const Todo = () => {
             Add Todo
           </button>
         </form>
+        <ToastContainer position="top-center" autoClose={3000} />
       </div>
       <div className="w-full px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {todoLists.map((todo, index) => (
