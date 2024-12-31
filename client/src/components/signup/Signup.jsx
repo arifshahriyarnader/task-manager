@@ -73,7 +73,7 @@ const Signup = () => {
     try {
       await authServices.signup(payload);
       toast.success("Signup successful! Redirecting to login...");
-      navigate("/login");
+      setTimeout(() => navigate("/login"),3000);
     } catch (error) {
       if (error.response?.data?.errors) {
         const validationErrors = error.response.data.errors;

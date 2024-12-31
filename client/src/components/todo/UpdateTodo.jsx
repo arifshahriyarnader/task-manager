@@ -1,3 +1,5 @@
+import { ToastContainer, toast } from "react-toastify";
+
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { updateTask } from "../../services/todoServices";
@@ -22,11 +24,12 @@ const UpdateTodo = () => {
         description: updtaedDescription,
       };
       await updateTask(todo._id, updatedTodo);
-      alert("Task updated successfully");
-      navigate("/todo");
+      toast.success("Task updated successfully");
+      setTimeout(() => navigate("/todo"), 3000);
+      // navigate("/todo");
     } catch (error) {
       console.error("Failed to update task", error);
-      alert("Failed to updated task");
+      toast.error("Failed to updated task");
     }
   };
   const handleCancel = () => {
@@ -69,6 +72,7 @@ const UpdateTodo = () => {
           </button>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
