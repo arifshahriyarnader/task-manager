@@ -1,3 +1,6 @@
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { authServices } from "../../auth";
@@ -23,7 +26,7 @@ const Signin = () => {
     authServices
       .login(payload)
       .then(() => navigate("/"))
-      .catch(() => alert("Failed to login"));
+      .catch(() => toast.error("Failed to login"));
   };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -91,6 +94,7 @@ const Signin = () => {
           </Link>
         </p>
       </form>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
