@@ -1,3 +1,5 @@
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import React, { useState } from "react";
 import { authServices } from "../../auth";
 import { Link, useNavigate } from "react-router-dom";
@@ -40,24 +42,24 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (honeypot) {
-      alert("Bot Detected. Submission rejected");
+      toast.error("Bot Detected. Submission rejected");
       return;
     }
 
     if (!isValidEmail(formData.email)) {
-      alert("Please enter a valid email address");
+      toast.error("Please enter a valid email address");
       return;
     }
 
     if (!isValidPassword(formData.password)) {
-      alert(
+      toast.error(
         "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, and one number."
       );
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords Do not match");
+      toast.error("Passwords Do not match");
       return;
     }
     const payload = {
@@ -70,13 +72,14 @@ const Signup = () => {
 
     try {
       await authServices.signup(payload);
+      toast.success("Signup successful! Redirecting to login...");
       navigate("/login");
     } catch (error) {
       if (error.response?.data?.errors) {
         const validationErrors = error.response.data.errors;
-        alert(validationErrors.map((err) => err.msg).join("\n"));
+        toast.error(validationErrors.map((err) => err.msg).join("\n"));
       } else {
-        alert("Failed to sign up. Please try again.");
+        toast.error("Failed to sign up. Please try again.");
       }
     }
   };
@@ -218,6 +221,7 @@ const Signup = () => {
           </Link>
         </p>
       </form>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
