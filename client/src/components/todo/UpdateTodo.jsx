@@ -1,40 +1,19 @@
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import { useUpdateTodo } from "../../hooks";
+import { useLocation } from "react-router-dom";
 
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { updateTask } from "../../api/services";
 const UpdateTodo = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { todo } = location.state || {};
+  const {
+    updatedTitle,
+    updatedDescription,
+    handleUpdateTitleChange,
+    handleUpdateDescriptionChange,
+    handleUpdate,
+    handleCancel,
+  } = useUpdateTodo(todo);
 
-  const [updatedTitle, setUpdatedTitle] = useState(todo?.title || "");
-  const [updtaedDescription, setUpdatedDescription] = useState(
-    todo?.description || ""
-  );
-
-  const handleUpdateTitleChange = (e) => setUpdatedTitle(e.target.value);
-  const handleUpdateDescriptionChange = (e) =>
-    setUpdatedDescription(e.target.value);
-
-  const handleUpdate = async () => {
-    try {
-      const updatedTodo = {
-        title: updatedTitle,
-        description: updtaedDescription,
-      };
-      await updateTask(todo._id, updatedTodo);
-      toast.success("Task updated successfully");
-      setTimeout(() => navigate("/todo"), 3000);
-      // navigate("/todo");
-    } catch (error) {
-      console.error("Failed to update task", error);
-      toast.error("Failed to updated task");
-    }
-  };
-  const handleCancel = () => {
-    navigate("/todo");
-  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 shadow-md rounded-md">
@@ -51,7 +30,7 @@ const UpdateTodo = () => {
         <div className="mb-4">
           <label className="block text-gray-700 mb-1">Description</label>
           <textarea
-            value={updtaedDescription}
+            value={updatedDescription}
             onChange={handleUpdateDescriptionChange}
             className="w-full px-4 py-2 border rounded-md"
             rows="4"
