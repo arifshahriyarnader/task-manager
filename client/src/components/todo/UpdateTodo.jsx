@@ -2,7 +2,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateTask } from "../../services/todoServices";
+import { updateTask } from "../../api/services";
 const UpdateTodo = () => {
   const location = useLocation();
   const navigate = useNavigate();
