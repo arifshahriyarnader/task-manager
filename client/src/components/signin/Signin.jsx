@@ -1,33 +1,20 @@
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { authServices } from "../../auth";
-import { Link, useNavigate } from "react-router-dom";
+
+import { Link } from "react-router-dom";
+import { useSignIn } from "../../hooks";
 
 const Signin = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const navigate = useNavigate();
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const payload = {
-      type: "email",
-      email: formData.email,
-      password: formData.password,
-    };
-    authServices
-      .login(payload)
-      .then(() => navigate("/"))
-      .catch(() => toast.error("Failed to login"));
-  };
+  const {
+    formData,
+    handleSubmit,
+    handleChange,
+    showPassword,
+    setShowPassword,
+  } = useSignIn();
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
