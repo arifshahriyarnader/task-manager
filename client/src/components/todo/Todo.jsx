@@ -14,7 +14,7 @@ const Todo = () => {
           className="w-full max-w-md bg-white p-8 mt-20 shadow-md rounded-md"
           onSubmit={handleSubmit}
         >
-          <h2 className="text-2xl font-bold text-center mb-6">Add Todo</h2>
+          <h2 className="text-2xl font-bold text-center mb-6">Add Task</h2>
 
           <div className="mb-4">
             <label
@@ -58,7 +58,7 @@ const Todo = () => {
             type="submit"
             className="w-full bg-orange-500 text-white py-2 px-4 rounded-md font-bold hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
           >
-            Add Todo
+            Add Task
           </button>
         </form>
         <ToastContainer position="top-center" autoClose={3000} />

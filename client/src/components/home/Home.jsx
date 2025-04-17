@@ -29,7 +29,7 @@ const Home = () => {
               border-solid border-orange-500 rounded-md
                cursor-pointer bg-[#F97316] text-white hover:text-[#fff] hover:bg-[#F97316]"
         >
-          Make Todo List
+          Make Task List
         </button>
       </div>
     </div>

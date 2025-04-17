@@ -75,7 +75,7 @@ const Nav = () => {
       <ul className="flex flex-col pt-10 items-center gap-18 md:gap-20 cursor-pointer font-bold md:flex-row md:pt-0">
         <Link to="/">Home</Link>
         <Link to="#" onClick={handleTodoClick}>
-          Todo
+          Task
         </Link>
         {isUserLoggedIn ? (
           <div className="relative dropdown">
