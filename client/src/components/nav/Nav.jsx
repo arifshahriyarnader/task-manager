@@ -1,66 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
-import { authServices } from "../../auth";
+import { useNav } from "../../hooks";
 
 const Nav = () => {
-  const navigate = useNavigate();
-  const isUserLoggedIn = authServices.isUserLoggedIn();
-  const [showMenu, setShowMenu] =useState(false);
-  const [userName, setUserName] = useState("User");
-
-  useEffect(() => {
-    if (isUserLoggedIn) {
-      const user = JSON.parse(localStorage.getItem("TODO_APP_LOGGED_IN_USER")); // Update the key
-      if (user?.fname && user?.lname) {
-        setUserName(`${user.fname} ${user.lname}`);
-      } else {
-        setUserName("User");
-      }
-    } else {
-      setUserName("User");
-    }
-  }, [isUserLoggedIn]);
-  
-
-  const handleLogout = () => {
-    authServices.logout();
-    localStorage.removeItem("user"); // Remove user data from localStorage
-    setUserName("User"); // Reset username
-    navigate('/login')
-  };
-
-  const handleProfileClick=() =>{
-    setShowMenu((prev) => !prev);
-  }
-
-  const handleOutsideClick=(e) =>{
-    if(!e.target.closest(".dropdown")){
-      setShowMenu(false);
-    }
-  }
-
-  useEffect(()  =>{
-    if(showMenu){
-      document.addEventListener("click", handleOutsideClick)
-    }
-    else{
-      document.removeEventListener("click", handleOutsideClick);
-    }
-    return () =>{
-      document.removeEventListener("click", handleOutsideClick)
-    }
-  }, [showMenu])
-
-  const handleTodoClick = (e) => {
-    e.preventDefault();
-    if (isUserLoggedIn) {
-      navigate("/todo");
-    } else {
-      navigate("/login");
-    }
-  };
-  
+  const {
+    isUserLoggedIn,
+    handleLogout,
+    handleProfileClick,
+    handleTodoClick,
+    showMenu,
+    userName,
+  } = useNav();
   return (
     <nav className="flex flex-col items-center justify-around px-5 py-5 bg-[#F8F9FA] md:flex-row">
       <div>
@@ -90,7 +40,7 @@ const Nav = () => {
             {showMenu && (
               <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg">
                 <div className="p-4 border-b text-gray-700 font-semibold whitespace-nowrap">
-                {userName} {/* Display full name or a default value */}
+                  {userName} {/* Display full name or a default value */}
                 </div>
                 <button
                   className="w-full text-left px-4 py-2 hover:bg-gray-100"
