@@ -4,8 +4,15 @@ import TodoCard from "./TodoCard";
 import { useTodo } from "../../hooks";
 
 const Todo = () => {
-  const { todo, todoLists, handleChange, handleSubmit, handleUpdate, handleDelete } =
-    useTodo();
+  const {
+    todo,
+    todoLists,
+    handleChange,
+    handleSubmit,
+    handleUpdate,
+    handleDelete,
+    handleGenerateAI,
+  } = useTodo();
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -49,17 +56,25 @@ const Todo = () => {
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder="Enter a description"
-              rows="4"
+              rows="8"
               required
             ></textarea>
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-orange-500 text-white py-2 px-4 rounded-md font-bold hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          >
-            Add Task
-          </button>
+          <div className="flex gap-4">
+            <button
+              type="button"
+              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md font-bold hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={handleGenerateAI}
+            >
+              Generate with AI
+            </button>
+            <button
+              type="submit"
+              className="w-full bg-orange-500 text-white py-2 px-4 rounded-md font-bold hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              Add Task
+            </button>
+          </div>
         </form>
         <ToastContainer position="top-center" autoClose={3000} />
       </div>

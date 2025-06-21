@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
@@ -24,6 +24,9 @@ app.use("/api/users", require("./routes/api/user"));
 
 //task route
 app.use("/api/task", require("./routes/api/task"));
+
+//ai route
+app.use("/api/ai", require("./routes/api/ai"));
 
 const port = 5000;
 app.listen(port, () => {

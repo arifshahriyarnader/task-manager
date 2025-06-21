@@ -5,7 +5,7 @@ import { MdEdit } from "react-icons/md";
 const TodoCard = ({ title, description, onUpdate, onDelete }) => {
   return (
     <div className="my-8 bg-white shadow-md rounded-md border border-orange-300 p-4 text-center">
-      <h3 className="text-lg">{title}</h3>
+      <h3 className="text-lg font-bold">{title}</h3>
       <p className="text-lg break-words">{description}</p>
       <div className="flex flex-row justify-between cursor-pointer">
         <div className="text-orange-600" onClick={onUpdate}>

@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { createTask, getUserTasks, deleteTask } from "../api/services";
+import {
+  createTask,
+  getUserTasks,
+  deleteTask,
+  generateTask,
+} from "../api/services";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -90,5 +95,50 @@ export function useTodo() {
       }
     }
   };
-  return { todo, todoLists, handleChange, handleSubmit, handleUpdate, handleDelete };
+  const handleGenerateAI = async () => {
+    const prompt = `${todo.title} ${todo.description}`.trim();
+    if (!prompt) {
+      toast.warning("Please write something in title or description first.");
+      return;
+    }
+
+    try {
+      const { data } = await generateTask(prompt);
+
+      if (data.response) {
+        const lines = data.response.split("\n").filter(Boolean);
+        const titleLine = lines.find((line) =>
+          line.toLowerCase().startsWith("title:")
+        );
+        const descriptionLine = lines.find((line) =>
+          line.toLowerCase().startsWith("description:")
+        );
+
+        setTodo({
+          title: titleLine
+            ? titleLine.replace(/title:/i, "").trim()
+            : todo.title,
+          description: descriptionLine
+            ? descriptionLine.replace(/description:/i, "").trim()
+            : todo.description,
+        });
+
+        toast.success("AI generated a task successfully!");
+      } else {
+        toast.error("AI did not return a proper response.");
+      }
+    } catch (error) {
+      console.error("AI generation error:", error);
+      toast.error("Failed to generate task with AI.");
+    }
+  };
+  return {
+    todo,
+    todoLists,
+    handleChange,
+    handleSubmit,
+    handleUpdate,
+    handleDelete,
+    handleGenerateAI,
+  };
 }
