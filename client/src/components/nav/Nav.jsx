@@ -19,7 +19,7 @@ const Nav = () => {
           className="font-bold text-3xl"
           style={{ color: "#FF9000" }}
         >
-          Task Manager APP
+          Task Manager
         </Link>
       </div>
       <ul className="flex flex-col pt-10 items-center gap-18 md:gap-20 cursor-pointer font-bold md:flex-row md:pt-0">
