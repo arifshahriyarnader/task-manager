@@ -1,0 +1,32 @@
+name: FullStack CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'server/*'
+      - '.github/workflows/server.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'server/*'
+      - '.github/workflows/server.yml'
+  workflow-dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install server dependencies
+        run: npm install
+        working-directory: ./server
+
+      
