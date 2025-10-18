@@ -34,3 +34,6 @@ jobs:
         run: npm test || echo "No tests"
         working-directory: ./server
       
+      - name: Build app
+        run: npm run build
+        working-directory: ./server
