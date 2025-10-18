@@ -37,3 +37,11 @@ jobs:
       - name: Build app
         run: npm run build --if-present
         working-directory: ./server
+
+      - name: Deploy to AWS ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: taskdef.json
+          service: task-manager-service
+          cluster: task-manager-cluster
+          wait-for-service-stability: true
