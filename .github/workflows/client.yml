@@ -1,0 +1,13 @@
+name: Client Cl
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'client/*'
+      - '.github/workflows/client.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'client/*'
+      - '.github/workflows/client.yml'
